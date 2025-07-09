@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+    title: Messenger API
+    version: "1.0.0"
+servers:
+    - url: http://localhost:3000
+paths:
+    /register:
+        post:
+            tags:
+                - Auth
+            summary: Register a new user
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            required:
+                                - username
+                                - email
+                                - password
+                                - agree
+                            properties:
+                                username:
+                                    type: string
+                                    minLength: 3
+                                    example: johndoe
+                                email:
+                                    type: string
+                                    format: email
+                                    example: johndoe@example.com
+                                password:
+                                    type: string
+                                    minLength: 6
+                                    example: MyStrongPassword123
+                                agree:
+                                    type: boolean
+                                    example: true
+            responses:
+                "201":
+                    description: User created successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: User registered successfully
+                                    userId:
+                                        type: string
+                                        example: abc123
+                "400":
+                    description: Validation failed
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error:
+                                        type: string
+                            examples:
+                                missingEmail:
+                                    summary: Email is missing
+                                    value:
+                                        error: "Email is required"
+                                shortPassword:
+                                    summary: Password too short
+                                    value:
+                                        error: "Password must be at least 6 characters"
+                                usernameTaken:
+                                    summary: Username already exists
+                                    value:
+                                        error: "Username already taken"
