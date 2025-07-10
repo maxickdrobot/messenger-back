@@ -1,25 +1,24 @@
-const User = require("../../../models/users");
+import User from "../../../models/users.js";
+import { ErrorCodes } from "../../../constants/errorCodes.js";
 
-const addUser = async (userData) => {
+export const addUser = async (userData) => {
     try {
         const newUser = new User(userData);
         await newUser.save();
         return newUser;
     } catch (error) {
-        throw new Error("Error adding user");
+        const customError = new Error("Error adding user");
+        customError.code = ErrorCodes.INTERNAL_SERVER_ERROR;
+        throw customError;
     }
 };
 
-const getUserByEmail = async (email) => {
+export const getUserByEmail = async (email) => {
     try {
-        const user = await User.findOne({ email });
-        return user;
+        return await User.findOne({ email });
     } catch (error) {
-        throw new Error("Something went wrong...");
+        const customError = new Error("Something went wrong...");
+        customError.code = ErrorCodes.INTERNAL_SERVER_ERROR;
+        throw customError;
     }
-};
-
-module.exports = {
-    addUser,
-    getUserByEmail,
 };

@@ -1,10 +1,11 @@
-const path = require("path");
-const swaggerUI = require("swagger-ui-express");
-const YAML = require("yamljs");
+import path from "path";
+import { fileURLToPath } from "url";
+import swaggerUI from "swagger-ui-express";
+import YAML from "yamljs";
 
-const swaggerApiDoc = YAML.load(path.join(__dirname + "/swagger.yaml"));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-module.exports = {
-    swaggerUI,
-    swaggerApiDoc,
-};
+const swaggerApiDoc = YAML.load(path.join(__dirname, "swagger.yaml"));
+
+export { swaggerUI, swaggerApiDoc };

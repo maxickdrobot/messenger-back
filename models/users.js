@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const USER_ROLES = require("../constants/userRoles");
+import mongoose from "mongoose";
+import USER_ROLES from "../constants/userRoles.js";
 
 const userSchema = new mongoose.Schema(
     {
@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
             unique: true,
             match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"],
         },
-        name: {
+        username: {
             type: String,
             required: true,
         },
@@ -28,4 +28,4 @@ const userSchema = new mongoose.Schema(
     }
 );
 
-module.exports = mongoose.model("User", userSchema, "users");
+export default mongoose.model("User", userSchema, "users");

@@ -1,7 +1,7 @@
-const express = require("express");
-
-const usersController = require("./users.controller");
-const usersMiddleware = require("./users.middleware");
+import express from "express";
+import passport from "passport";
+import * as usersController from "./users.controller.js";
+import * as usersMiddleware from "./users.middleware.js";
 
 const router = express.Router();
 
@@ -10,5 +10,7 @@ router.post(
     [usersMiddleware.validateUser, usersMiddleware.checkUserExist],
     usersController.register
 );
+router.post("/login", [usersMiddleware.handleLoginErrors], usersController.login);
+router.get("/logout", usersController.logout);
 
-module.exports = router;
+export default router;
