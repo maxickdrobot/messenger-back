@@ -3,9 +3,27 @@ import * as usersService from "./users.service.js";
 import * as validationUtil from "../../../utils/validations.util.js";
 import { ErrorCodes } from "../../../constants/errorCodes.js";
 
-export const validateUser = (req, res, next) => {
+export const validateRegisterUser = (req, res, next) => {
     return validationUtil
-        .createUserValidation(req.body)
+        .createRegisterUserValidation(req.body)
+        .then((data) => {
+            req.body = data;
+            next();
+        })
+        .catch((error) => {
+            return res.status(400).json({
+                error: {
+                    code: ErrorCodes.VALIDATION_ERROR,
+                    message: "Validation failed",
+                    details: error.details,
+                },
+            });
+        });
+};
+
+export const validateLoginUser = (req, res, next) => {
+    return validationUtil
+        .createLoginUserValidation(req.body)
         .then((data) => {
             req.body = data;
             next();

@@ -7,10 +7,14 @@ const router = express.Router();
 
 router.post(
     "/register",
-    [usersMiddleware.validateUser, usersMiddleware.checkUserExist],
+    [usersMiddleware.validateRegisterUser, usersMiddleware.checkUserExist],
     usersController.register
 );
-router.post("/login", [usersMiddleware.handleLoginErrors], usersController.login);
+router.post(
+    "/login",
+    [usersMiddleware.validateLoginUser, usersMiddleware.handleLoginErrors],
+    usersController.login
+);
 router.get("/logout", usersController.logout);
 
 export default router;

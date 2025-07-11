@@ -29,19 +29,24 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/ErrorResponse"
+                                oneOf:
+                                    - $ref: "#/components/schemas/ValidationErrorResponse"
+                                    - $ref: "#/components/schemas/ErrorResponse"
                             examples:
                                 missingEmail:
                                     summary: Email is missing
                                     value:
-                                        error: "Email is required"
-                                shortPassword:
-                                    summary: Password too short
-                                    value:
-                                        error: "Password must be at least 6 characters"
+                                        error:
+                                            code: "VALIDATION_ERROR"
+                                            message: "Validation failed"
+                                            details:
+                                                - field: "email"
+                                                  message: '"email" is required'
+                                                  type: "any.required"
                                 duplicateEmail:
                                     summary: Account with this email already exists
                                     value:
+                                        code: "USER_ALREADY_EXISTS"
                                         error: "An account with this email already exists. Try another email or login."
 
     /web/users/login:
@@ -69,25 +74,17 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/ErrorResponse"
                             examples:
-                                invalidEmail:
-                                    summary: Email not found
+                                invalidCredentials:
+                                    summary: Invalid login
                                     value:
-                                        error: "Invalid email or password"
-                                invalidPassword:
-                                    summary: Wrong password
-                                    value:
+                                        code: "INVALID_CREDENTIALS"
                                         error: "Invalid email or password"
                 "400":
                     description: Validation error
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/ErrorResponse"
-                            examples:
-                                missingEmail:
-                                    summary: Email is missing
-                                    value:
-                                        error: "Email is required"
+                                $ref: "#/components/schemas/ValidationErrorResponse"
 
     /web/users/logout:
         get:
@@ -111,6 +108,7 @@ paths:
                                 logoutFailed:
                                     summary: Logout error
                                     value:
+                                        code: "INTERNAL_SERVER_ERROR"
                                         error: "Logout failed"
 
 components:
@@ -148,11 +146,45 @@ components:
                     type: string
                     example: 64a2b95c4f6f0b2e7e4e2c91
 
+        ValidationErrorDetail:
+            type: object
+            properties:
+                field:
+                    type: string
+                    example: email
+                message:
+                    type: string
+                    example: '"email" is required'
+                type:
+                    type: string
+                    example: any.required
+
+        ValidationErrorResponse:
+            type: object
+            properties:
+                error:
+                    type: object
+                    properties:
+                        code:
+                            type: string
+                            example: VALIDATION_ERROR
+                        message:
+                            type: string
+                            example: Validation failed
+                        details:
+                            type: array
+                            items:
+                                $ref: "#/components/schemas/ValidationErrorDetail"
+
         ErrorResponse:
             type: object
             properties:
                 error:
                     type: string
+                    example: User already exists
+                code:
+                    type: string
+                    example: USER_ALREADY_EXISTS
 
         LoginRequest:
             type: object

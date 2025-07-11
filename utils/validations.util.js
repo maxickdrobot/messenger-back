@@ -1,7 +1,7 @@
 import Joi from "joi";
 import USER_ROLES from "../constants/userRoles.js";
 
-const createUserSchema = Joi.object({
+const createRegisterUserSchema = Joi.object({
     username: Joi.string().min(2).max(30).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
@@ -10,6 +10,15 @@ const createUserSchema = Joi.object({
         .default(USER_ROLES.USER),
 });
 
-export const createUserValidation = (data) => {
-    return createUserSchema.validateAsync(data);
+export const createRegisterUserValidation = (data) => {
+    return createRegisterUserSchema.validateAsync(data);
+};
+
+const createLoginUserSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+});
+
+export const createLoginUserValidation = (data) => {
+    return createLoginUserSchema.validateAsync(data);
 };
