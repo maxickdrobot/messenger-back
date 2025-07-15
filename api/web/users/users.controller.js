@@ -2,34 +2,59 @@ import bcrypt from "bcrypt";
 import * as usersService from "./users.service.js";
 import { ErrorCodes } from "../../../constants/errorCodes.js";
 
-export const register = async (req, res) => {
-    const { email, password, username } = req.body;
+export const registrationRequest = async (req, res) => {
+    const { email, password, username, message = "" } = req.body;
 
     try {
         const hash = await bcrypt.hash(password, 10);
-        const newUser = await usersService.addUser({
+        const newRequest = await usersService.createRegistrationRequest({
             username,
             email,
             password: hash,
+            message,
         });
 
         return res.status(201).json({
-            message: "User registered successfully",
-            user: {
-                id: newUser._id,
-                username: newUser.username,
-                email: newUser.email,
-            },
+            message: "Request submitted, wait for admin approval",
         });
     } catch (error) {
         return res.status(500).json({
             error: {
                 code: ErrorCodes.INTERNAL_SERVER_ERROR,
-                message: "Failed to register user",
+                message: "Failed to submit request",
             },
         });
     }
 };
+
+// export const register = async (req, res) => {
+//     const { email, password, username } = req.body;
+
+//     try {
+//         const hash = await bcrypt.hash(password, 10);
+//         const newUser = await usersService.createUser({
+//             username,
+//             email,
+//             password: hash,
+//         });
+
+//         return res.status(201).json({
+//             message: "User registered successfully",
+//             user: {
+//                 id: newUser._id,
+//                 username: newUser.username,
+//                 email: newUser.email,
+//             },
+//         });
+//     } catch (error) {
+//         return res.status(500).json({
+//             error: {
+//                 code: ErrorCodes.INTERNAL_SERVER_ERROR,
+//                 message: "Failed to register user",
+//             },
+//         });
+//     }
+// };
 
 export const login = (req, res) => {
     const { user } = req;
