@@ -5,28 +5,19 @@ import * as authMiddleware from "../../common/middleware/auth.maiddleware.js";
 
 const router = express.Router();
 
-// router.post(
-//     "/register",
-//     [
-//         usersMiddleware.validateRegisterUser,
-//         usersMiddleware.checkUserExist,
-//     ],
-//     usersController.register
-// );
+router.get("/verify-email/:token", [usersMiddleware.checkTokenExist], usersController.verifyEmail);
 router.post(
-    "/registration-request",
-    [
-        usersMiddleware.validateRegistrationRequestUser,
-        usersMiddleware.checkUserRegistrationRequestExist,
-        usersMiddleware.checkUserExist,
-    ],
-    usersController.registrationRequest
+  "/register",
+  [usersMiddleware.validateRegisterUser, usersMiddleware.checkUserExist],
+  usersController.register
 );
+
 router.post(
-    "/login",
-    [usersMiddleware.validateLoginUser, usersMiddleware.handleLoginErrors],
-    usersController.login
+  "/login",
+  [usersMiddleware.validateLoginUser, usersMiddleware.handleLoginErrors],
+  usersController.login
 );
-router.get("/logout", [authMiddleware.checkAuth], usersController.logout);
+router.post("/logout", [authMiddleware.checkAuth], usersController.logout);
+router.get("/me", [authMiddleware.checkAuth], usersController.getCurrentUser);
 
 export default router;

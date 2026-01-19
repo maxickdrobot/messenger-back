@@ -6,7 +6,7 @@ servers:
     - url: http://localhost:3000
 
 paths:
-    /web/users/register:
+    /web/users/registration-request:
         post:
             tags:
                 - Auth
@@ -43,11 +43,16 @@ paths:
                                                 - field: "email"
                                                   message: '"email" is required'
                                                   type: "any.required"
-                                duplicateEmail:
+                                duplicateAccount:
                                     summary: Account with this email already exists
                                     value:
                                         code: "USER_ALREADY_EXISTS"
                                         error: "An account with this email already exists. Try another email or login."
+                                duplicateRegistrationRequest:
+                                    summary: Reqest with this email already exists
+                                    value:
+                                        code: "USER_ALREADY_EXISTS"
+                                        error: "Request already exists for this email"
 
     /web/users/login:
         post:

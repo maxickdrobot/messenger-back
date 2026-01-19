@@ -13,10 +13,10 @@ const app = express();
 app.use(morgan("dev"));
 
 app.use(
-    cors({
-        origin: "http://localhost:5173",
-        credentials: true,
-    })
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
 );
 
 connectDB();
@@ -31,5 +31,5 @@ app.use(passport.session());
 app.use("/", express.json(), indexRouter);
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
